@@ -1,5 +1,5 @@
 [project]
-name = "food-ordering-service"
+name = "food-ordering-system"
 version = "0.1.0"
 description = "Project following udemy course that was originally done in Java"
 readme = "README.md"

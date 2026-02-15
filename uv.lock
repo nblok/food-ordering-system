@@ -4,8 +4,8 @@ requires-python = ">=3.13.1"
 [manifest]
 members = [
     "common",
-    "food-ordering-service",
-    "ordering-service",
+    "food-ordering-system",
+    "order-service",
 ]
 
 [[package]]
@@ -156,7 +156,7 @@ wheels = [
 ]
 
 [[package]]
-name = "food-ordering-service"
+name = "food-ordering-system"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
@@ -533,9 +533,9 @@ wheels = [
 ]
 
 [[package]]
-name = "ordering-service"
+name = "order-service"
 version = "0.1.0"
-source = { editable = "projects/ordering-service" }
+source = { editable = "projects/order-service" }
 dependencies = [
     { name = "common" },
 ]

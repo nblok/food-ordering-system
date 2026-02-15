@@ -1,5 +1,5 @@
 [project]
-name = "ordering-service"
+name = "order-service"
 version = "0.1.0"
 description = "Ordering Service"
 readme = "README.md"
