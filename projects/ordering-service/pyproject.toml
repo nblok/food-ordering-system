@@ -1,0 +1,19 @@
+[project]
+name = "ordering-service"
+version = "0.1.0"
+description = "Ordering Service"
+readme = "README.md"
+authors = [
+    { name = "Nathan Blok", email = "ndblok@gmail.com" }
+]
+requires-python = ">=3.13.1"
+dependencies = [
+    "common",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv.sources]
+common = { workspace = true }

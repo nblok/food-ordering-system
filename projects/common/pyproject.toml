@@ -1,0 +1,14 @@
+[project]
+name = "common"
+version = "0.1.0"
+description = "Shared code for services"
+readme = "README.md"
+authors = [
+    { name = "Nathan Blok", email = "ndblok@gmail.com" }
+]
+requires-python = ">=3.13.1"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
