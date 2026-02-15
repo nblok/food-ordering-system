@@ -9,7 +9,7 @@ class BaseEntity(ABC, t.Generic[ID]):
         self._id = identifier
 
     @property
-    def id(self):
+    def id(self) -> ID:
         return self._id
 
     def __repr__(self) -> str:

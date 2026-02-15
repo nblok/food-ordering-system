@@ -1,7 +1,8 @@
+import typing as t
 from dataclasses import dataclass
-from uuid import UUID
 
+T = t.TypeVar("T")
 
 @dataclass(frozen=True)
-class Identifier:
-    value: UUID
+class Identifier(t.Generic[T]):
+    value: T
