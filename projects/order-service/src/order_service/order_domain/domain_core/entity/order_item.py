@@ -26,23 +26,23 @@ class OrderItem(BaseEntity[OrderItemId]):
         price: Money
         sub_total: Money
 
-        def order_item_id(self, order_item_id: OrderItemId) -> t.Self:
+        def with_order_item_id(self, order_item_id: OrderItemId) -> t.Self:
             self.order_item_id = order_item_id
             return self
 
-        def product(self, product: Product) -> t.Self:
+        def with_product(self, product: Product) -> t.Self:
             self.product = product
             return self
 
-        def quantity(self, quantity: int) -> t.Self:
+        def with_quantity(self, quantity: int) -> t.Self:
             self.quantity = quantity
             return self
 
-        def price(self, price: Money) -> t.Self:
+        def with_price(self, price: Money) -> t.Self:
             self.price = price
             return self
 
-        def sub_total(self, sub_total: Money) -> t.Self:
+        def with_sub_total(self, sub_total: Money) -> t.Self:
             self.sub_total = sub_total
             return self
 

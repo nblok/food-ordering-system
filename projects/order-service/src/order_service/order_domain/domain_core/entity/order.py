@@ -19,11 +19,11 @@ class Order(AggregateRoot[OrderId]):
         self.street_address = builder.street_address
         self.price = builder.price
         self.items = builder.items
-        self._trackingId: t.Optional[TrackingId] = builder._tracking_id
-        self._status: OrderStatus = (
-            builder._status if builder._status else OrderStatus.PENDING
+        self.tracking_id: t.Optional[TrackingId] = builder.tracking_id
+        self.status: OrderStatus = (
+            builder.status if builder.status else OrderStatus.PENDING
         )
-        self._failure_messages: t.Optional[list[str]] = builder._failure_messages
+        self.failure_messages: t.Optional[list[str]] = builder.failure_messages
 
     @classmethod
     def builder(cls) -> "Order.Builder":
@@ -37,44 +37,44 @@ class Order(AggregateRoot[OrderId]):
         street_address: StreetAddress
         price: Money
         items: t.Sequence[OrderItem]
-        _tracking_id: t.Optional[TrackingId]
-        _status: t.Optional[OrderStatus]
-        _failure_messages: t.Optional[list[str]]
+        tracking_id: t.Optional[TrackingId] = None
+        status: t.Optional[OrderStatus] = None
+        failure_messages: t.Optional[list[str]] = None
 
-        def order_id(self, order_id: OrderId) -> t.Self:
+        def with_order_id(self, order_id: OrderId) -> "Order.Builder":
             self.order_id = order_id
             return self
 
-        def customer_id(self, customer_id: CustomerId) -> t.Self:
+        def with_customer_id(self, customer_id: CustomerId) -> "Order.Builder":
             self.customer_id = customer_id
             return self
 
-        def restaurant_id(self, restaurant_id: RestaurantId) -> t.Self:
+        def with_restaurant_id(self, restaurant_id: RestaurantId) -> "Order.Builder":
             self.restaurant_id = restaurant_id
             return self
 
-        def street_address(self, street_address: StreetAddress) -> t.Self:
+        def with_street_address(self, street_address: StreetAddress) -> "Order.Builder":
             self.street_address = street_address
             return self
 
-        def price(self, price: Money) -> t.Self:
+        def with_price(self, price: Money) -> "Order.Builder":
             self.price = price
             return self
 
-        def items(self, items: t.Sequence[OrderItem]) -> t.Self:
+        def with_items(self, items: t.Sequence[OrderItem]) -> "Order.Builder":
             self.items = items
             return self
 
-        def tracking_id(self, tracking_id: TrackingId) -> t.Self:
-            self._tracking_id = tracking_id
+        def with_tracking_id(self, tracking_id: TrackingId) -> "Order.Builder":
+            self.tracking_id = tracking_id
             return self
 
-        def status(self, status: OrderStatus) -> t.Self:
-            self._status = status
+        def with_status(self, status: OrderStatus) -> "Order.Builder":
+            self.status = status
             return self
 
-        def failure_messages(self, failure_messages: list[str]) -> t.Self:
-            self._failure_messages = failure_messages
+        def with_failure_messages(self, failure_messages: list[str]) -> "Order.Builder":
+            self.failure_messages = failure_messages
             return self
 
         def build(self) -> "Order":

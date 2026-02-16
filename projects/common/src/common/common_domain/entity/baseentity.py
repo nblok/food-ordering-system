@@ -1,10 +1,10 @@
 import typing as t
-from abc import ABC
+# from abc import ABC
 
 ID = t.TypeVar("ID")
 
 
-class BaseEntity(ABC, t.Generic[ID]):
+class BaseEntity(t.Generic[ID]):
     def __init__(self, identifier: ID):
         self._id = identifier
 
