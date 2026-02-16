@@ -45,7 +45,7 @@ FROM deps-${INCLUDE_DEPENDENCIES} AS final
 ARG PACKAGE
 
 # Copy all the rest of the code
-COPY . .
+COPY $PACKAGE $PACKAGE
 
 # finally install our code
 RUN uv sync --all-extras --inexact --package $PACKAGE
