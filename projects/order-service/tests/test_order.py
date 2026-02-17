@@ -36,6 +36,7 @@ def test_order_id():
             .with_items([
                 OrderItem.builder()
                     .with_order_item_id(OrderItemId(1))
+                    .with_order_id(order_id)
                     .with_product(
                         Product(
                             ProductId(uuid.uuid4()),

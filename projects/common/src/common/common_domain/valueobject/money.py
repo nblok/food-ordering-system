@@ -7,6 +7,11 @@ from decimal import Decimal, localcontext, ROUND_HALF_EVEN
 class Money:
     amount: Decimal
 
+    @classmethod
+    @property
+    def zero(cls) -> t.Self:
+        return cls(Decimal("0"))
+
     def is_greater_than_zero(self) -> bool:
         return self.amount > 0
 

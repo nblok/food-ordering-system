@@ -1,6 +1,7 @@
 import typing as t
 import dataclasses
 from common.common_domain.entity.baseentity import BaseEntity
+from common.common_domain.valueobject.identifier import OrderId
 from common.common_domain.valueobject.money import Money
 from order_service.order_domain.domain_core.valueobject.identifier import OrderItemId
 from order_service.order_domain.domain_core.entity.product import Product
@@ -9,10 +10,22 @@ from order_service.order_domain.domain_core.entity.product import Product
 class OrderItem(BaseEntity[OrderItemId]):
     def __init__(self, builder: "OrderItem.Builder"):
         super().__init__(builder.order_item_id)
-        self.product_id = builder.product
+        self.order_id = builder.order_id
+        self.product = builder.product
         self.quantity = builder.quantity
         self.price = builder.price
         self.sub_total = builder.sub_total
+
+    def initialize_order_item(self, order_id: OrderId, order_item_id: OrderItemId):
+        self.id = order_item_id
+        self.order_id = order_id
+
+    def is_price_valid(self) -> bool:
+        return (
+            self.price.is_greater_than_zero()
+            and self.price == self.product.price
+            and self.price.multiply_by(self.quantity) == self.sub_total
+        )
 
     @classmethod
     def builder(cls) -> "OrderItem.Builder":
@@ -21,6 +34,7 @@ class OrderItem(BaseEntity[OrderItemId]):
     @dataclasses.dataclass(init=False)
     class Builder:
         order_item_id: OrderItemId
+        order_id: OrderId
         product: Product
         quantity: int
         price: Money
@@ -28,6 +42,10 @@ class OrderItem(BaseEntity[OrderItemId]):
 
         def with_order_item_id(self, order_item_id: OrderItemId) -> t.Self:
             self.order_item_id = order_item_id
+            return self
+
+        def with_order_id(self, order_id: OrderId) -> t.Self:
+            self.order_id = order_id
             return self
 
         def with_product(self, product: Product) -> t.Self:
