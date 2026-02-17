@@ -34,15 +34,43 @@ class Order(AggregateRoot[OrderId]):
         self.status = OrderStatus.PENDING
         self._initialize_order_items()
 
-    def _initialize_order_items(self):
-        item_id = 1
-        for order_item in self.items:
-            order_item.initialize_order_item(t.cast(OrderId, self.id), OrderItemId(item_id))
-
     def validate_order(self):
         self._validate_initial_order()
         self._validate_total_price()
         self._validate_items_price()
+
+    def pay(self):
+        if self.status is not OrderStatus.PENDING:
+            raise OrderDomainException("Order cannot be paid if it is not in pending status.")
+        self.status = OrderStatus.PAID
+
+    def approve(self):
+        if self.status is not OrderStatus.PAID:
+            raise OrderDomainException("Order cannot be approved if it is not in paid status.")
+        self.status = OrderStatus.APPROVED
+
+    def init_cancel(self, failure_messages: list[str]):
+        if self.status is not OrderStatus.PAID:
+            raise OrderDomainException("Order cannot be canceled if it is not in paid status.")
+        self.status = OrderStatus.CANCELLING
+        self.update_failure_messages(failure_messages)
+
+    def cancel(self, failure_messages: list[str]):
+        if self.status not in {OrderStatus.CANCELLING, OrderStatus.PENDING}:
+            raise OrderDomainException("Order cannot be canceled if it is not in cancelling or pending status.")
+        self.status = OrderStatus.CANCELLED
+        self.update_failure_messages(failure_messages)
+
+    def update_failure_messages(self, failure_messages: list[str]):
+        if self.failure_messages is not None:
+            self.failure_messages.extend(failure_messages)
+        else:
+            self.failure_messages = failure_messages
+
+    def _initialize_order_items(self):
+        item_id = 1
+        for order_item in self.items:
+            order_item.initialize_order_item(t.cast(OrderId, self.id), OrderItemId(item_id))
 
     def _validate_initial_order(self):
         if self.status is not None or self.id is not None:
