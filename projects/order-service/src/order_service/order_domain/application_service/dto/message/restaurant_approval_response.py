@@ -1,11 +1,12 @@
 import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from common.common_domain.valueobject.order_approval_status import OrderApprovalStatus
 
 
-class RestaurantApprovalResponse(BaseModel, frozen=True):
+class RestaurantApprovalResponse(BaseModel):
+    model_config = ConfigDict(frozen=True)
     id: str
     saga_id: str
     order_id: str
