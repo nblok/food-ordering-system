@@ -26,7 +26,7 @@ FROM base AS deps-prod
 
 WORKDIR /src
 
-COPY pyproject.toml uv.lock  ./
+COPY pyproject.toml pyrightconfig.json uv.lock  ./
 
 ARG PACKAGE
 RUN --mount=type=cache,target=/root/.cache/uv \

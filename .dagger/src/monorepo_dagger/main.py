@@ -56,6 +56,7 @@ class MonorepoDagger:
         # with no source code (except pyproject.toml and uv.lock from the repo root)
         container = self.container_with_third_party_dependencies(
             pyproject_toml=root_dir.file("pyproject.toml"),
+            pyrightconfig_json=root_dir.file("pyrightconfig.json"),
             uv_lock=root_dir.file("uv.lock"),
             dockerfile=root_dir.file("Dockerfile"),  # this could be a parameter
             project=project,
@@ -83,6 +84,7 @@ class MonorepoDagger:
     def container_with_third_party_dependencies(
         self,
         pyproject_toml: File,
+        pyrightconfig_json: File,
         uv_lock: File,
         dockerfile: File,
         project: str,
@@ -94,6 +96,10 @@ class MonorepoDagger:
             .with_file(
                 "pyproject.toml",
                 pyproject_toml,
+            )
+            .with_file(
+                "pyrightconfig.json",
+                pyrightconfig_json,
             )
             .with_file(
                 "uv.lock",

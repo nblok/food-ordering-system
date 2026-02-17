@@ -20,12 +20,6 @@ dagger = [
     "monorepo-dagger",
 ]
 
-[tool.pyright]
-venv = ".venv"
-venvPath = "."
-typeCheckingMode = "standard"
-useLibraryCodeForTypes = true
-
 [tool.uv.workspace]
 members = ["projects/*"]
 
