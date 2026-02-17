@@ -8,3 +8,7 @@ class Product(BaseEntity[ProductId]):
         super().__init__(product_id)
         self.name = name
         self.price = price
+
+    def update_with_confirmed_name_and_price(self, name: str, price: Money):
+        self.name = name
+        self.price = price
