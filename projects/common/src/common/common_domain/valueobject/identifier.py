@@ -9,6 +9,9 @@ T = t.TypeVar("T")
 class Identifier(t.Generic[T]):
     value: T
 
+    def __str__(self):
+        return str(self.value)
+
 
 @dataclass(frozen=True)
 class OrderId(Identifier[UUID]):
