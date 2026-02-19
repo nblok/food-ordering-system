@@ -1,8 +1,7 @@
 import logging
 import uuid
-from decimal import Decimal
 
-from common.common_domain.valueobject.identifier import RestaurantId, ProductId, CustomerId, OrderId
+from common.common_domain.valueobject.identifier import RestaurantId, ProductId, CustomerId
 from common.common_domain.valueobject.money import Money
 from order_service.order_domain.application_service.dto.create.create_order_command import CreateOrderCommand
 from order_service.order_domain.application_service.dto.create.create_order_response import CreateOrderResponse
@@ -12,24 +11,19 @@ from order_service.order_domain.domain_core.entity.order import Order
 from order_service.order_domain.domain_core.entity.order_item import OrderItem
 from order_service.order_domain.domain_core.entity.product import Product
 from order_service.order_domain.domain_core.entity.restaurant import Restaurant
-from order_service.order_domain.domain_core.exception.order_domain_exception import OrderDomainException
 from order_service.order_domain.domain_core.valueobject.street_address import StreetAddress
 
 
 class OrderDataMapper:
 
     def create_order_command_to_restaurant(self, command: CreateOrderCommand) -> Restaurant:
-        restaurant = self.restaurant_repository.find_restaurant(command.restaurant_id)
-        if not restaurant:
-            logging.warning(f'could not find restaurant {command.restaurant_id}')
-            raise OrderDomainException(f'could not find restaurant {command.restaurant_id}')
         return (
-            restaurant.builder()
-                .restaurant_id(RestaurantId(command.restaurant_id))
-                .products(map(
+            Restaurant.builder()
+                .with_restaurant_id(RestaurantId(command.restaurant_id))
+                .with_products(list(map(
                     lambda item: Product(ProductId(item.product_id)),
                     command.items
-                ))
+                )))
                 .build()
         )
 
