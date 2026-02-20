@@ -24,13 +24,19 @@ class Order(AggregateRoot[OrderId]):
         self.street_address = builder.street_address
         self.price = builder.price
         self.items = builder.items
-        self.tracking_id: t.Optional[TrackingId] = builder.tracking_id
+        self._tracking_id: t.Optional[TrackingId] = builder.tracking_id
         self.status: t.Optional[OrderStatus] = builder.status
         self.failure_messages: t.Optional[list[str]] = builder.failure_messages
 
+    @property
+    def tracking_id(self) -> TrackingId:
+        if self._tracking_id is None:
+            raise OrderDomainException("Tracking ID is not initialized.")
+        return self._tracking_id
+
     def initialize_order(self):
         self.id = OrderId(uuid.uuid4())
-        self.tracking_id = TrackingId(uuid.uuid4())
+        self._tracking_id = TrackingId(uuid.uuid4())
         self.status = OrderStatus.PENDING
         self._initialize_order_items()
 

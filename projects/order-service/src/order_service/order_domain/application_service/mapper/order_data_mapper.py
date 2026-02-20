@@ -7,6 +7,7 @@ from order_service.order_domain.application_service.dto.create.create_order_comm
 from order_service.order_domain.application_service.dto.create.create_order_response import CreateOrderResponse
 from order_service.order_domain.application_service.dto.create.order_address import OrderAddress
 from order_service.order_domain.application_service.dto.create.order_item import OrderItem as OrderItemDTO
+from order_service.order_domain.application_service.dto.track.track_order_response import TrackOrderResponse
 from order_service.order_domain.domain_core.entity.order import Order
 from order_service.order_domain.domain_core.entity.order_item import OrderItem
 from order_service.order_domain.domain_core.entity.product import Product
@@ -67,3 +68,11 @@ class OrderDataMapper:
             address.postal_code,
             address.city
         )
+
+    def order_to_track_order_response(self, order: Order) -> TrackOrderResponse:
+        return TrackOrderResponse.model_validate(dict(
+            order_tracking_id=order.tracking_id.value,
+            status=order.status,
+            failure_messages=order.failure_messages
+        ))
+
