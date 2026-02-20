@@ -1,5 +1,3 @@
-import logging
-
 from order_service.order_domain.application_service.dto.create.create_order_command import CreateOrderCommand
 from order_service.order_domain.application_service.dto.create.create_order_response import CreateOrderResponse
 from order_service.order_domain.application_service.dto.track.track_order_query import TrackOrderQuery

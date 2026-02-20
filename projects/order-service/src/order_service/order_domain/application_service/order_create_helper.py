@@ -1,4 +1,5 @@
 import logging
+from uuid import UUID
 
 from order_service.order_domain.application_service.dto.create.create_order_command import CreateOrderCommand
 from order_service.order_domain.application_service.mapper.order_data_mapper import OrderDataMapper
