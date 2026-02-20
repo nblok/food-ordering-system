@@ -45,7 +45,9 @@ class OrderDomainServiceImpl(OrderDomainService):
         for order_item in order.items:
             for restaurant_product in restaurant.products:
                 current_product = order_item.product
-                if current_product == restaurant_product:
+                if current_product == restaurant_product and (
+                    restaurant_product.name is not None and restaurant_product.price is not None
+                ):
                     current_product.update_with_confirmed_name_and_price(
                         restaurant_product.name, restaurant_product.price
                     )
