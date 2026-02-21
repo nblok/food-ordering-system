@@ -28,7 +28,7 @@ def test_order_id():
                 StreetAddress(
                     id=uuid.uuid4(),
                     street='123 Main St',
-                    postal_code=12345,
+                    postal_code='12345',
                     city='Anytown'
                 )
             )
