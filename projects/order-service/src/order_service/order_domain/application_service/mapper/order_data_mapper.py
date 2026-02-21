@@ -43,7 +43,7 @@ class OrderDataMapper:
 
     def order_to_create_order_response(self, order: Order, message: str) -> CreateOrderResponse:
         return CreateOrderResponse.model_validate(dict(
-            order_tracking_id=order.tracking_id,
+            order_tracking_id=str(order.tracking_id),
             status=order.status,
             message=message
         ))

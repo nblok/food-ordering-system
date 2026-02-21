@@ -21,7 +21,7 @@ class Restaurant(AggregateRoot[RestaurantId]):
     class Builder:
         restaurant_id: RestaurantId
         products: list[Product]
-        active: bool
+        active: bool = True
 
         def with_restaurant_id(
             self, restaurant_id: RestaurantId

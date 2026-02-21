@@ -6,7 +6,7 @@ from uuid import UUID
 class StreetAddress:
     id: UUID
     street: str
-    postal_code: int
+    postal_code: str
     city: str
 
     def __eq__(self, other: object) -> bool:

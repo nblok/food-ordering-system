@@ -2,6 +2,7 @@ import typing as t
 import dataclasses
 import uuid
 import functools
+import itertools
 import operator
 
 from common.common_domain.entity.aggregateroot import AggregateRoot
@@ -87,11 +88,11 @@ class Order(AggregateRoot[OrderId]):
             raise OrderDomainException("Order total price cannot be zero or negative.")
 
     def _validate_items_price(self):
-        def validate_item_and_return_sub_total(order_item: OrderItem):
+        def validate_item_and_return_sub_total(order_item: OrderItem) -> Money:
             self._validate_item_price(order_item)
             return order_item.sub_total
-        order_items_total = functools.reduce(
-            operator.add, map(validate_item_and_return_sub_total, self.items), Money.zero
+        order_items_total: Money = functools.reduce(
+            operator.add, (validate_item_and_return_sub_total(item) for item in self.items)
         )
         if not self.price == order_items_total:
             raise OrderDomainException("Order items total price does not match order total price.")
@@ -107,12 +108,12 @@ class Order(AggregateRoot[OrderId]):
 
     @dataclasses.dataclass(init=False)
     class Builder:
-        order_id: OrderId
         customer_id: CustomerId
         restaurant_id: RestaurantId
         street_address: StreetAddress
         price: Money
         items: t.Sequence[OrderItem]
+        order_id: OrderId | None = None
         tracking_id: t.Optional[TrackingId] = None
         status: t.Optional[OrderStatus] = None
         failure_messages: t.Optional[list[str]] = None

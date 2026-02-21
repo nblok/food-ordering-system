@@ -14,7 +14,7 @@ class OrderItem(BaseEntity[OrderItemId]):
         self.product = builder.product
         self.quantity = builder.quantity
         self.price = builder.price
-        self.sub_total = builder.sub_total
+        self.sub_total: Money = builder.sub_total
 
     def initialize_order_item(self, order_id: OrderId, order_item_id: OrderItemId):
         self.id = order_item_id
@@ -33,12 +33,12 @@ class OrderItem(BaseEntity[OrderItemId]):
 
     @dataclasses.dataclass(init=False)
     class Builder:
-        order_item_id: OrderItemId
-        order_id: OrderId
         product: Product
         quantity: int
         price: Money
         sub_total: Money
+        order_item_id: OrderItemId | None = None
+        order_id: OrderId | None = None
 
         def with_order_item_id(self, order_item_id: OrderItemId) -> t.Self:
             self.order_item_id = order_item_id
