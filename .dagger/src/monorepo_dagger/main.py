@@ -191,3 +191,9 @@ class MonorepoDagger:
         """Run pyright for a given project."""
         container = await self.build_project(root_dir, project)
         return await container.with_exec(["pyright"]).stdout()
+
+    @function
+    async def fmt(self, root_dir: RootDir, project: str) -> str:
+        """Run black for a given project."""
+        container = await self.build_project(root_dir, project)
+        return await container.with_exec(["ruff", "format"]).stdout()

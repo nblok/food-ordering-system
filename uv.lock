@@ -589,10 +589,14 @@ version = "0.1.0"
 source = { editable = "projects/order-service" }
 dependencies = [
     { name = "common" },
+    { name = "dependency-injector" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "common", editable = "projects/common" }]
+requires-dist = [
+    { name = "common", editable = "projects/common" },
+    { name = "dependency-injector", specifier = ">=4.48.3" },
+]
 
 [[package]]
 name = "packaging"
