@@ -46,4 +46,3 @@ class Money:
         with localcontext() as ctx:
             ctx.rounding = ROUND_HALF_EVEN
             return round(value, 2)
-

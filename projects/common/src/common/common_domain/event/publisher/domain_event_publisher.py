@@ -7,6 +7,4 @@ T = t.TypeVar("T", bound=DomainEvent, contravariant=True)
 
 
 class DomainEventPublisher(t.Protocol[T]):
-
-    def publish(self, domain_event: T) -> None:
-        ...
+    def publish(self, domain_event: T) -> None: ...
