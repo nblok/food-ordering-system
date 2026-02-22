@@ -10,7 +10,7 @@ class Money:
     @classmethod
     @property
     def zero(cls) -> t.Self:
-        return cls(Decimal("0"))
+        return cls(Decimal("0.00"))
 
     def is_greater_than_zero(self) -> bool:
         return self.amount > 0
@@ -37,6 +37,9 @@ class Money:
 
     def __hash__(self) -> int:
         return hash(self.amount)
+
+    def __str__(self):
+        return f"{self.amount:.2f}"
 
     @classmethod
     def _set_scale(cls, value: Decimal) -> Decimal:

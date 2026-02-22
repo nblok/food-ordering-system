@@ -5,10 +5,7 @@ from common.common_domain.valueobject.money import Money
 
 class Product(BaseEntity[ProductId]):
     def __init__(
-        self,
-        product_id: ProductId,
-        name: str | None = None,
-        price: Money | None = None
+        self, product_id: ProductId, name: str | None = None, price: Money | None = None
     ):
         super().__init__(product_id)
         self.name = name

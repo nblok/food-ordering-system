@@ -6,11 +6,15 @@ import itertools
 import operator
 
 from common.common_domain.entity.aggregateroot import AggregateRoot
-from common.common_domain.valueobject.identifier import OrderId, CustomerId, RestaurantId
+from common.common_domain.valueobject.identifier import (
+    OrderId,
+    CustomerId,
+    RestaurantId,
+)
 from common.common_domain.valueobject.money import Money
 from common.common_domain.valueobject.order_status import OrderStatus
 from order_service.order_domain.domain_core.valueobject.street_address import (
-    StreetAddress
+    StreetAddress,
 )
 from .order_item import OrderItem
 from ..valueobject.identifier import TrackingId, OrderItemId
@@ -48,23 +52,31 @@ class Order(AggregateRoot[OrderId]):
 
     def pay(self):
         if self.status is not OrderStatus.PENDING:
-            raise OrderDomainException("Order cannot be paid if it is not in pending status.")
+            raise OrderDomainException(
+                "Order cannot be paid if it is not in pending status."
+            )
         self.status = OrderStatus.PAID
 
     def approve(self):
         if self.status is not OrderStatus.PAID:
-            raise OrderDomainException("Order cannot be approved if it is not in paid status.")
+            raise OrderDomainException(
+                "Order cannot be approved if it is not in paid status."
+            )
         self.status = OrderStatus.APPROVED
 
     def init_cancel(self, failure_messages: list[str]):
         if self.status is not OrderStatus.PAID:
-            raise OrderDomainException("Order cannot be canceled if it is not in paid status.")
+            raise OrderDomainException(
+                "Order cannot be canceled if it is not in paid status."
+            )
         self.status = OrderStatus.CANCELLING
         self.update_failure_messages(failure_messages)
 
     def cancel(self, failure_messages: list[str]):
         if self.status not in {OrderStatus.CANCELLING, OrderStatus.PENDING}:
-            raise OrderDomainException("Order cannot be canceled if it is not in cancelling or pending status.")
+            raise OrderDomainException(
+                "Order cannot be canceled if it is not in cancelling or pending status."
+            )
         self.status = OrderStatus.CANCELLED
         self.update_failure_messages(failure_messages)
 
@@ -77,11 +89,15 @@ class Order(AggregateRoot[OrderId]):
     def _initialize_order_items(self):
         item_id = 1
         for order_item in self.items:
-            order_item.initialize_order_item(t.cast(OrderId, self.id), OrderItemId(item_id))
+            order_item.initialize_order_item(
+                t.cast(OrderId, self.id), OrderItemId(item_id)
+            )
 
     def _validate_initial_order(self):
         if self.status is not None or self.id is not None:
-            raise OrderDomainException("Order cannot be initialized with existing status or id.")
+            raise OrderDomainException(
+                "Order cannot be initialized with existing status or id."
+            )
 
     def _validate_total_price(self):
         if not self.price.is_greater_than_zero():
@@ -91,16 +107,22 @@ class Order(AggregateRoot[OrderId]):
         def validate_item_and_return_sub_total(order_item: OrderItem) -> Money:
             self._validate_item_price(order_item)
             return order_item.sub_total
+
         order_items_total: Money = functools.reduce(
-            operator.add, (validate_item_and_return_sub_total(item) for item in self.items)
+            operator.add,
+            (validate_item_and_return_sub_total(item) for item in self.items),
         )
         if not self.price == order_items_total:
-            raise OrderDomainException("Order items total price does not match order total price.")
+            raise OrderDomainException(
+                f"Order items total price {order_items_total} does not match order total price {self.price}."
+            )
 
     @staticmethod
     def _validate_item_price(order_item: OrderItem):
         if not order_item.is_price_valid():
-            raise OrderDomainException("Order item price is invalid.")
+            raise OrderDomainException(
+                f"Order item price is invalid {order_item.price} for product {order_item.product.id}."
+            )
 
     @classmethod
     def builder(cls) -> "Order.Builder":

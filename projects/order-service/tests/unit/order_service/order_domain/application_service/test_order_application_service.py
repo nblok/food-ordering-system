@@ -2,6 +2,7 @@ import decimal
 import pytest
 import uuid
 
+from common.common_domain.exception.domain_exception import DomainException
 from common.common_domain.valueobject.order_status import OrderStatus
 from order_service.order_domain.domain_core.entity.customer import Customer
 from order_service.order_domain.domain_core.entity.product import Product
@@ -11,6 +12,7 @@ from common.common_domain.valueobject.identifier import CustomerId, RestaurantId
 from order_service.order_domain.application_service.dto.create.create_order_command import CreateOrderCommand
 from order_service.order_domain.application_service.dto.create.order_address import OrderAddress
 from order_service.order_domain.application_service.dto.create.order_item import OrderItem
+from order_service.order_domain.domain_core.exception.order_domain_exception import OrderDomainException
 
 
 class TestOrderApplicationService:
@@ -55,8 +57,54 @@ class TestOrderApplicationService:
                 )
             ]
         )
-        # self.create_order_command_wrong_price = CreateOrderCommand(customer_id=1, restaurant_id=1, price=0)
-        # self.create_order_command_wrong_product_price = CreateOrderCommand(customer_id=1, restaurant_id=1, items=[])
+        self.create_order_command_wrong_total_price = CreateOrderCommand(
+            customer_id=self.CUSTOMER_ID,
+            restaurant_id=self.RESTAURANT_ID,
+            address=OrderAddress(
+                city='Paris',
+                street='street 1',
+                postal_code='1000AB',
+            ),
+            price=decimal.Decimal('250.00'),
+            items=[
+                OrderItem(
+                    product_id=self.PRODUCT_ID,
+                    quantity=1,
+                    price=decimal.Decimal('50.00'),
+                    sub_total=decimal.Decimal('50.00')
+                ),
+                OrderItem(
+                    product_id=self.PRODUCT_ID,
+                    quantity=3,
+                    price=decimal.Decimal('50.00'),
+                    sub_total=decimal.Decimal('150.00')
+                )
+            ]
+        )
+        self.create_order_command_wrong_product_price = CreateOrderCommand(
+            customer_id=self.CUSTOMER_ID,
+            restaurant_id=self.RESTAURANT_ID,
+            address=OrderAddress(
+                city='Paris',
+                street='street 1',
+                postal_code='1000AB',
+            ),
+            price=decimal.Decimal('210.00'),
+            items=[
+                OrderItem(
+                    product_id=self.PRODUCT_ID,
+                    quantity=1,
+                    price=decimal.Decimal('60.00'),
+                    sub_total=decimal.Decimal('60.00')
+                ),
+                OrderItem(
+                    product_id=self.PRODUCT_ID,
+                    quantity=3,
+                    price=decimal.Decimal('50.00'),
+                    sub_total=decimal.Decimal('150.00')
+                )
+            ]
+        )
         self.customer = Customer(CustomerId(self.CUSTOMER_ID))
         self.restaurant_response = (Restaurant.builder()
             .with_restaurant_id(RestaurantId(self.RESTAURANT_ID))
@@ -78,3 +126,19 @@ class TestOrderApplicationService:
         assert response.status == OrderStatus.PENDING
         assert response.message == 'Order created successfully'
         assert response.order_tracking_id is not None
+
+    def test_create_order_wrong_total_price(self):
+        with pytest.raises(OrderDomainException) as excinfo:
+            self.order_application_service.create_order(
+                self.create_order_command_wrong_total_price
+            )
+        assert str(excinfo.value) == \
+               f'Order items total price 200.00 does not match order total price 250.00.'
+
+    def test_create_order_wrong_product_price(self):
+        with pytest.raises(OrderDomainException) as excinfo:
+            self.order_application_service.create_order(
+                self.create_order_command_wrong_product_price
+            )
+        assert str(excinfo.value) == \
+            f'Order item price is invalid 60.00 for product {self.PRODUCT_ID}.'

@@ -1,6 +1,12 @@
-from common.common_domain.event.publisher.domain_event_publisher import DomainEventPublisher
-from order_service.order_domain.domain_core.event.order_cancelled_event import OrderCancelledEvent
+from common.common_domain.event.publisher.domain_event_publisher import (
+    DomainEventPublisher,
+)
+from order_service.order_domain.domain_core.event.order_cancelled_event import (
+    OrderCancelledEvent,
+)
 
 
-class OrderCancelledPaymentRequestMessagePublisher(DomainEventPublisher[OrderCancelledEvent]):
+class OrderCancelledPaymentRequestMessagePublisher(
+    DomainEventPublisher[OrderCancelledEvent]
+):
     pass

@@ -3,15 +3,25 @@ import logging as log
 from common.common_lib.zoned_datetime import ZonedDateTime
 from order_service.order_domain.domain_core.entity.order import Order
 from order_service.order_domain.domain_core.entity.restaurant import Restaurant
-from order_service.order_domain.domain_core.event.order_cancelled_event import OrderCancelledEvent
-from order_service.order_domain.domain_core.event.order_created_event import OrderCreatedEvent
-from order_service.order_domain.domain_core.event.order_payed_event import OrderPayedEvent
-from order_service.order_domain.domain_core.exception.order_domain_exception import OrderDomainException
+from order_service.order_domain.domain_core.event.order_cancelled_event import (
+    OrderCancelledEvent,
+)
+from order_service.order_domain.domain_core.event.order_created_event import (
+    OrderCreatedEvent,
+)
+from order_service.order_domain.domain_core.event.order_payed_event import (
+    OrderPayedEvent,
+)
+from order_service.order_domain.domain_core.exception.order_domain_exception import (
+    OrderDomainException,
+)
 from order_service.order_domain.order_domain_service import OrderDomainService
 
 
 class OrderDomainServiceImpl(OrderDomainService):
-    def validate_and_initiate_order(self, order: Order, restaurant: Restaurant) -> OrderCreatedEvent:
+    def validate_and_initiate_order(
+        self, order: Order, restaurant: Restaurant
+    ) -> OrderCreatedEvent:
         self._validate_restaurant(restaurant)
         self._set_order_product_information(order, restaurant)
         order.validate_order()
@@ -28,7 +38,9 @@ class OrderDomainServiceImpl(OrderDomainService):
         order.approve()
         log.info(f"Order {order.id} approved successfully.")
 
-    def cancel_order_payment(self, order: Order, failure_messages: list[str]) -> OrderCancelledEvent:
+    def cancel_order_payment(
+        self, order: Order, failure_messages: list[str]
+    ) -> OrderCancelledEvent:
         order.init_cancel(failure_messages)
         return OrderCancelledEvent(order, ZonedDateTime.utc_now())
 
@@ -46,7 +58,8 @@ class OrderDomainServiceImpl(OrderDomainService):
             for restaurant_product in restaurant.products:
                 current_product = order_item.product
                 if current_product == restaurant_product and (
-                    restaurant_product.name is not None and restaurant_product.price is not None
+                    restaurant_product.name is not None
+                    and restaurant_product.price is not None
                 ):
                     current_product.update_with_confirmed_name_and_price(
                         restaurant_product.name, restaurant_product.price

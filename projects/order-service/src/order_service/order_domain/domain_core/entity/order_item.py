@@ -64,5 +64,5 @@ class OrderItem(BaseEntity[OrderItemId]):
             self.sub_total = sub_total
             return self
 
-        def build(self) -> 'OrderItem':
+        def build(self) -> "OrderItem":
             return OrderItem(self)
