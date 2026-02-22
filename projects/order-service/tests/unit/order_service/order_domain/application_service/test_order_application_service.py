@@ -142,3 +142,19 @@ class TestOrderApplicationService:
             )
         assert str(excinfo.value) == \
             f'Order item price is invalid 60.00 for product {self.PRODUCT_ID}.'
+
+    def test_create_order_with_passive_restaurant(self, restaurant_repository):
+        passive_restaurant = (
+            Restaurant.builder()
+                .with_restaurant_id(RestaurantId(self.RESTAURANT_ID))
+                .with_products([
+                   Product(ProductId(self.PRODUCT_ID), 'product-1', Money(decimal.Decimal('50.00'))),
+                   Product(ProductId(self.PRODUCT_ID), 'product-2', Money(decimal.Decimal('50.00')))
+                ])
+                .with_active(False)
+                .build()
+        )
+        restaurant_repository.find_restaurant_information.return_value = passive_restaurant
+        with pytest.raises(OrderDomainException) as excinfo:
+            self.order_application_service.create_order(self.create_order_command)
+        assert str(excinfo.value) == f'Restaurant {self.RESTAURANT_ID} is not active.'

@@ -50,7 +50,7 @@ class OrderDomainServiceImpl(OrderDomainService):
 
     def _validate_restaurant(self, restaurant: Restaurant):
         if not restaurant.active:
-            raise OrderDomainException(f"Restaurant is {restaurant.id} not active.")
+            raise OrderDomainException(f"Restaurant {restaurant.id} is not active.")
 
     def _set_order_product_information(self, order: Order, restaurant: Restaurant):
         # TODO: optimize this, use dict instead of loops
