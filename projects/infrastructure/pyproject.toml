@@ -7,7 +7,11 @@ authors = [
     { name = "Nathan Blok", email = "ndblok@gmail.com" }
 ]
 requires-python = ">=3.13.1"
-dependencies = []
+dependencies = [
+    "confluent-kafka>=2.13.0",
+    "dataclasses-avroschema>=0.66.2",
+    "pyarrow>=23.0.1",
+]
 
 [build-system]
 requires = ["uv_build>=0.10.4,<0.11.0"]
